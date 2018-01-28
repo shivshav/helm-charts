@@ -7,9 +7,11 @@ metadata:
     chart: {{ template "nfs-provisioner.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+  namespace: {{ .Release.Namespace }} # required
 subjects:
   - kind: ServiceAccount
     name: {{ template "nfs-provisioner.fullname" . }}
+    namespace: {{ .Release.Namespace }} # required
 roleRef:
   kind: ClusterRole
   name: {{ template "nfs-provisioner.fullname" . }} 

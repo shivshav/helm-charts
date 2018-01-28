@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: {{ template "nfs-provisioner.fullname" . }}
@@ -55,18 +55,10 @@ spec:
             - name: rpcbind-udp
               containerPort: 111
               protocol: UDP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
           args:
-            - {{- printf "-provisioner=%s" (include "nfs-provisioner.provisionerName" .) }}
+            - {{ printf "-provisioner=%s" (include "nfs-provisioner.provisionerName" . ) | quote }}
           resources:
-{{ toYaml .Values.resources | indent 12 }}
+{{ toYaml .Values.resources | indent 12 -}}
           volumeMounts:
             - name: storage-volume
               mountPath: /export
@@ -88,8 +80,7 @@ spec:
               - key: {{ template "nfs-provisioner.provisionerName" . }}-storage
                 operator: In
                 values:
-                - true
-{{ toYaml . | indent 8 }}
+                - "true"
     {{- end }}
     {{- with .Values.tolerations }}
       tolerations:

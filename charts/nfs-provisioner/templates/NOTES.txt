@@ -4,21 +4,18 @@ Setup Steps:
 1. Ensure {{ .Values.hostStoragePath }} exists, is writable, and, ideally, is backed by some type of persistent storage
 
 2. Apply label to node which will host the NFS service and export {{ .Values.hostStoragePath }} to other nodes
-
 {{/*
-
-{{- if .Values.nodeSelector }}
+{{- if }}
 {{- else }}
 {{- end }}
 */}}
 
 {{- range $key, $value := .Values.nodeSelector }}
-kubectl label nodes <node> {{ $key }}={{ $value }}
+  kubectl label nodes <node> {{ $key }}={{ $value }}
 {{- end }}
-kubectl label nodes <node> {{ template "nfs-provisioner.provisionerName" . }}-storage
+  kubectl label nodes <node> {{ template "nfs-provisioner.provisionerName" . }}-storage=true
 
-
-Network storage will be available as the storage class {{ template "nfs-provisioner.fullname" . }}.
+Network storage will be available as the storage class {{ template "nfs-provisioner.name" . }}.
 {{- if .Values.defaultStorage }}
 This provisioner has been configured as your default storage backend. Nothing special needs to be done to use it. Any pods with persistent volume claims will have this backend store it in a directory under {{ .Values.hostStoragePath }}.
 {{- else }}
