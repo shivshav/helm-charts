@@ -1,0 +1,15 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: {{ template "nfs-provisioner.fullname" . }}
+  labels:
+    app: {{ template "nfs-provisioner.name" . }}
+    chart: {{ template "nfs-provisioner.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+#  {{- if .Values.defaultStorage }} 
+#  annotations:
+#    storageclass.beta.kubernetes.io/is-default-class: "true"
+#  {{- end }}
+reclaimPolicy: Retain
+provisioner: {{ template "nfs-provisioner.provisionerName" . }}

@@ -1,0 +1,32 @@
+# Default values for nfs-provisioner.
+# This is a YAML-formatted file.
+image:
+  repository: quay.io/kubernetes_incubator/nfs-provisioner
+  tag: v1.0.8
+  pullPolicy: IfNotPresent
+
+# A prefix, in domain name format, added to the provisioner for the sake of uniqueness in the cluster
+# clusterDomain: example.com
+
+# If true, helm will label this as the default storage class to use for dynamic provisioning of persistent volume claims
+defaultStorage: false
+
+# The path on the host that will be exposed through NFS throughout the cluster. This path must exist and be writable prior to creating the release
+# Note: This is a a required value!
+# hostStoragePath: /mnt/kubernetes
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+# If not provided, affinity will be used instead as the pod should only be scheduled onto a node with the proper host paths configured with a storage backend
+# nodeSelector: {}
+tolerations: []

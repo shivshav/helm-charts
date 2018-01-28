@@ -1,0 +1,28 @@
+Thank you for using the nfs-provisioner helm chart! More information on the underlying resources for this chart can be obtained at https://github.com/kubernetes-incubator/external-storage/blob/master/nfs/docs/deployment.md, which was provided graciously as an example by the kubernetes team along with the image itself.
+
+Setup Steps:
+1. Ensure {{ .Values.hostStoragePath }} exists, is writable, and, ideally, is backed by some type of persistent storage
+
+2. Apply label to node which will host the NFS service and export {{ .Values.hostStoragePath }} to other nodes
+
+{{/*
+
+{{- if .Values.nodeSelector }}
+{{- else }}
+{{- end }}
+*/}}
+
+{{- range $key, $value := .Values.nodeSelector }}
+kubectl label nodes <node> {{ $key }}={{ $value }}
+{{- end }}
+kubectl label nodes <node> {{ template "nfs-provisioner.provisionerName" . }}
+
+
+Network storage will be available as the storage class {{ template "nfs-provisioner.fullname" . }}.
+{{- if .Values.defaultStorage }}
+This provisioner has been configured as your default storage backend. Nothing special needs to be done to use it. Any pods with persistent volume claims will have this backend store it in a directory under {{ .Values.hostStoragePath }}.
+{{- else }}
+To use this storage backend provided by this provisioner, just add 'spec.storageClassName: {{ template "nfs-provisioner.fullname" . }}' to any persistent volume claim
+{{- end }}
+
+Happy clustering! :)
