@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "keepalived-vip.fullname" . }}
+  labels:
+    app: {{ template "keepalived-vip.name" . }}
+    chart: {{ template "keepalived-vip.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+{{ toYaml .Values.services | indent 2 }} 

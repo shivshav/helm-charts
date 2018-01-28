@@ -1,0 +1,31 @@
+# Default values for keepalived-vip.
+# This is a YAML-formatted file.
+image:
+  repository: gcr.io/google_containers/kube-keepalived-vip
+  tag: 0.11
+  pullPolicy: IfNotPresent
+
+# Whether or not the daemon-set will be responsible for allocating VIP's from services in all namespaces, or just the ones in its own namespace
+watchAllNamespaces: true
+
+# A map of ip address --> service names for which keepalived will be responsible for 
+#services:
+#  10.10.10.2: kube-system/haproxy
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

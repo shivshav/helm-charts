@@ -1,0 +1,8 @@
+Your keepalive virtual IP daemon is now running. It has been configured to expose these services:
+{{- range $ip, $service := .Values.services }}
+  {{ $ip }} -----> {{ $service }}
+{{- end }}
+Note: Make sure the IP addresses supplied aren't used by any other devices on your local network
+
+If you need to expose another service in the future, just update your values configuration with the new service/IP combination and run
+  helm upgrade -f <config-file> shiv/keepalived-vip <release-name>

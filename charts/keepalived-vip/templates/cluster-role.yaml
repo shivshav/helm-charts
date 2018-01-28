@@ -1,0 +1,18 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: {{ template "keepalived-vip.fullname" . }}
+  labels:
+    app: {{ template "keepalived-vip.name" . }}
+    chart: {{ template "keepalived-vip.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+rules:
+- apiGroups: [""]
+  resources:
+  - pods
+  - nodes
+  - endpoints
+  - services
+  - configmaps
+  verbs: ["get", "list", "watch"]
