@@ -85,10 +85,10 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
             - matchExpressions:
-              - key: {{ template "nfs-provisioner.provisionerName" . }}
+              - key: {{ template "nfs-provisioner.provisionerName" . }}-storage
                 operator: In
                 values:
-                - {{ .Values.hostStoragePath }}
+                - true
 {{ toYaml . | indent 8 }}
     {{- end }}
     {{- with .Values.tolerations }}

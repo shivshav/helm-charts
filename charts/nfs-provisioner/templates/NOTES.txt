@@ -15,7 +15,7 @@ Setup Steps:
 {{- range $key, $value := .Values.nodeSelector }}
 kubectl label nodes <node> {{ $key }}={{ $value }}
 {{- end }}
-kubectl label nodes <node> {{ template "nfs-provisioner.provisionerName" . }}
+kubectl label nodes <node> {{ template "nfs-provisioner.provisionerName" . }}-storage
 
 
 Network storage will be available as the storage class {{ template "nfs-provisioner.fullname" . }}.
