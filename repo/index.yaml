@@ -1,0 +1,13 @@
+apiVersion: v1
+entries:
+  nfs-provisioner:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-01-28T04:17:54.833314873-08:00
+    description: A Helm chart for Kubernetes
+    digest: 45d78f42f165e35a1ba97ba15c4e27c62d91b5276006a2da92efbecc6da64743
+    name: nfs-provisioner
+    urls:
+    - https://shivshav.github.io/helm-charts/nfs-provisioner-0.1.0.tgz
+    version: 0.1.0
+generated: 2018-01-28T04:17:54.832909823-08:00
