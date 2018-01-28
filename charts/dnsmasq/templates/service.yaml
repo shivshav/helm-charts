@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "dnsmasq.fullname" . }}
+  labels:
+    app: {{ template "dnsmasq.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 53
+      name: dns-tcp
+      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.dns)))}}
+      nodePort: {{ .Values.service.nodePorts.dns }}
+      {{- end }}
+      targetPort: dns-tcp
+      protocol: TCP
+    - port: 53
+      name: dns-udp
+      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.dns)))}}
+      nodePort: {{ .Values.service.nodePorts.dns }}
+      {{- end }}
+      targetPort: dns-udp
+      protocol: UDP
+  selector:
+    app: {{ template "dnsmasq.name" . }}
+    release: {{ .Release.Name }}

@@ -1,0 +1,29 @@
+# Default values for dnsmasq.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+image:
+  repository: andyshinn/dnsmasq
+  tag: 2.78
+  pullPolicy: IfNotPresent
+service:
+  name: dnsmasq
+  type: ClusterIP
+ # externalPort: 80
+  nodePorts:
+    dns: ""
+## A map of domain names to external IP addresses that should be reachable from your local network 
+# localNames:
+#   example.com: 10.10.10.32
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi

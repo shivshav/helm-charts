@@ -1,0 +1,4 @@
+Your dnsmasq deployment is starting up and is configured to route requests for:
+{{- range $domain, ip := .Values.localNames }}
+  ---> {{ $domain }} to {{ $ip }}
+{{- end }}

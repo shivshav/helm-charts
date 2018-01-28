@@ -1,0 +1,63 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "dnsmasq.fullname" . }}
+  labels:
+    app: {{ template "dnsmasq.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "dnsmasq.name" . }}
+        release: {{ .Release.Name }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/config-map.yaml") . | sha256sum }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: dns-udp
+              containerPort: 53
+              protocol: UDP
+            - name: dns-tcp
+              containerPort: 53
+              protocol: TCP
+#          livenessProbe:
+#            exec:
+#              command:
+#              - cat
+#              -  /var/run/dnsmasq.pid
+#          readinessProbe:
+#            exec:
+#              command:
+#              - cat
+#              -  /var/run/dnsmasq.pid
+          volumeMounts:
+          - mountPath: /config
+            name: config
+          args:
+          - "--log-facility=-"
+          - "--conf-file=/config/dnsmasq.conf"
+          {{- if .Values.logQueries }}
+          - {{ printf "--log-queries=%s" .Values.logQueries }}
+          {{- end }}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      volumes:
+      - name: config
+        configMap:
+          name: {{ template "dnsmasq.fullname" . }}
+    {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}

@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "dnsmasq.fullname" . }}
+  labels:
+    app: {{ template "dnsmasq.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+  dnsmasq.conf: |
+    # dnsmasq.conf
+    # Resolve DNS queries for olympus.shiv to local keepalived IP for proxy
+{{- range $domain, $ip := .Values.localNames }}
+    address=/{{ $domain }}/{{ $ip }}
+{{- end }}
+    no-resolv
+    no-hosts
+    # Set upstream nameservers for default resolution
+    ## Google's nameservers, for example
+{{- with .Values.upstreams }}
+    server={{ . }}
+{{- end }}
+    #    # Add custom domain to hosts entries
+    #    expand-hosts
