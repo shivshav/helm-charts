@@ -16,6 +16,15 @@ service:
 # localNames:
 #   example.com: 10.10.10.32
 
+# A set of upstream servers to send DNS queries to
+# We default to Google's upstreams
+upstreams:
+  - "8.8.8.8"
+  - "8.8.4.4"
+
+## Enables verbose logging of DNS queries for debugging purposes
+# logQueries: extra
+
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little

@@ -18,7 +18,7 @@ data:
     no-hosts
     # Set upstream nameservers for default resolution
     ## Google's nameservers, for example
-{{- with .Values.upstreams }}
+{{- range .Values.upstreams }}
     server={{ . }}
 {{- end }}
     #    # Add custom domain to hosts entries
