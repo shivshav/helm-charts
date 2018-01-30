@@ -1,0 +1,55 @@
+# This is a simple example of using a config map to create a single page static site.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "ghost.fullname" . }}
+  labels:
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app: {{ template "ghost.name" . }}
+data:
+  ghost-config: |
+    {
+        "url": {{ printf "%s://%s" (include "ghost.urlScheme" .) .Values.domain | quote }},
+        "database": {
+            "client": "mysql",
+            "connection": {
+                "host"     : {{ printf "%s-mysql" $.Release.Name | quote }},
+                "port"     : 3306,
+                "user"     : {{ .Values.mysql.mysqlUser | quote }},
+                "password" : {{ .Values.mysql.mysqlPassword | quote }},
+                "database" : {{ .Values.mysql.mysqlDatabase | quote }}
+            }
+        },
+        {{- if .Values.smtp.enabled }}
+        "mail": {
+            "from": {{ .Values.smtp.from | quote }},
+            "transport": "SMTP",
+            "options": {
+                "service": {{ .Values.smtp.service | quote }},
+                "auth": {
+                    "user": {{ .Values.smtp.user | quote }},
+                    "pass": {{ .Values.smtp.password | quote }}  # TODO: Research how to securely pass passwords
+                }
+            }
+        },
+        {{- end }}
+        "server": {
+            "host": "0.0.0.0",
+            "port": 2368
+        },
+        "paths": {
+            "contentPath": "content/"
+        },
+        "logging": {
+            "level": "info",
+            "rotation": {
+                "enabled": false
+            },
+            "transports": ["stdout"]
+        },
+        "maintenance": {
+          "enabled": {{ .Values.maintenanceMode }}
+        }
+    }

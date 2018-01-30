@@ -1,0 +1,77 @@
+image: 
+  repository: ghost
+  tag: 1.20-alpine
+  imagePullPolicy: IfNotPresent
+
+domain: example.com
+https: true
+
+## SMTP mail delivery configuration
+## ref: https://github.com/bitnami/bitnami-docker-redmine/#smtp-configuration
+##
+smtp:
+  enabled: false
+#  from:
+#  service:
+#  user:
+#  password:
+
+## Ingress settings
+##
+##
+ingress:
+  enabled: true
+#  labels:
+#  annotations:
+#  tls:
+
+##
+## MariaDB chart configuration
+##
+mysql:
+  enabled: true
+# if blank, a random root password is generated
+#  mysqlRootPassword:
+#  mysqlUser:
+#  mysqlPassword:
+#  mysqlDatabase:  
+  
+  persistence:
+    enabled: true
+    ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
+    ## Default: volume.alpha.kubernetes.io/storage-class: default
+    ##
+    # storageClass:
+    accessMode: ReadWriteOnce
+    size: 8Gi
+
+## Kubernetes configuration
+## For minikube, set this to NodePort, elsewhere use LoadBalancer
+##
+service:
+  type: ClusterIP
+
+## Enable persistence using Persistent Volume Claims
+## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+##
+persistence:
+  enabled: true
+  ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
+  ## Default: volume.alpha.kubernetes.io/storage-class: default
+  ##
+  # storageClass:
+  accessMode: ReadWriteOnce
+  size: 8Gi
+
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+##
+resources: {}
+#  requests:
+#    memory: 512Mi
+#    cpu: 300m
+#  limits:
+#    memory: 1024Mi
+#    cpu: 500m
+
+maintenanceMode: false

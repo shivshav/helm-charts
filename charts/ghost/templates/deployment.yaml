@@ -1,0 +1,65 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "ghost.fullname" . }}
+  labels:
+    app: {{ template "ghost.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "ghost.name" . }}
+        release: {{ .Release.Name }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          env:
+          - name: NODE_ENV
+            value: production
+          ports:
+            - name: http
+              containerPort: 2368
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 60
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 30
+          volumeMounts:
+          - name: data
+            mountPath: /var/lib/ghost/content
+          - name: config
+            mountPath: /var/lib/ghost/config.production.json
+            subPath: ghost-config
+      volumes:
+      - name: data
+      {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ template "ghost.fullname" . }}
+      {{- else }}
+        emptyDir: {}
+      {{- end }}
+      - name: config
+        configMap:
+          name: {{ template "ghost.fullname" . }}
+#          items:
+#          - key: ghost-config
+#            path: config.production.json
+    {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}
