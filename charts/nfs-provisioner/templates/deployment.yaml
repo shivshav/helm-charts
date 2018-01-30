@@ -37,7 +37,7 @@ spec:
                 fieldRef:
                   fieldPath: status.podIP
             - name: SERVICE_NAME
-              value: {{ template "nfs-provisioner.name" . }}
+              value: {{ template "nfs-provisioner.fullname" . }}
             - name: POD_NAMESPACE
               valueFrom:
                 fieldRef:
@@ -57,11 +57,11 @@ spec:
               protocol: UDP
           args:
             - {{ printf "-provisioner=%s" (include "nfs-provisioner.provisionerName" . ) | quote }}
-          resources:
-{{ toYaml .Values.resources | indent 12 -}}
           volumeMounts:
             - name: storage-volume
               mountPath: /export
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
       volumes:
         - name: storage-volume
           hostPath:
