@@ -33,12 +33,22 @@ spec:
             httpGet:
               path: /
               port: http
+              {{- if .Values.https }}
+              httpHeaders:
+              - name: X-Forwarded-Proto
+                value: https
+              {{- end }}
             initialDelaySeconds: 60
           readinessProbe:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: 30
+              {{- if .Values.https }}
+              httpHeaders:
+              - name: X-Forwarded-Proto
+                value: https
+              {{- end }}
+            initialDelaySeconds: 45
           volumeMounts:
           - name: data
             mountPath: /var/lib/ghost/content
