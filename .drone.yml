@@ -1,0 +1,4 @@
+pipeline:
+  check_version:
+    image: ubuntu:xenial
+    commands: /bin/bash .drone.sh
