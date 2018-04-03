@@ -1,0 +1,3 @@
+check_version:
+  image: alpine:latest
+  commands: sh .drone.sh
