@@ -53,7 +53,9 @@ semvercompare() {
 echo "Installing dependencies..."
 apt-get -qq update && apt-get -qq install -y git wget
 
-wget -s https://github.com/Masterminds/vert/releases/download/v0.1.0/vert-v0.1.0-linux-amd64 -O vert
+mkdir bin
+export PATH=$PATH:$HOME/bin
+wget -q -o /dev/null https://github.com/Masterminds/vert/releases/download/v0.1.0/vert-v0.1.0-linux-amd64 -O ./bin/vert
 chmod +x vert
 
 if [[ -z ${1} ]]; then
